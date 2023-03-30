@@ -17,12 +17,12 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run() {
     try {
 
-        const allVagetables = client.db('kachaBazar').collection('vagetable')
+        const allVagetables = client.db('kachaBazar').collection('vagetables')
         const allFruits = client.db('kachaBazar').collection('fruits')
         const allFishes = client.db('kachaBazar').collection('fish')
         const allbookings = client.db('kachaBazar').collection('bookings')
         const allUsers = client.db('kachaBazar').collection('users')
-        const addProduct = client.db('kachaBazar').collection('addProduct')
+        const addProduct = client.db('kachaBazar').collection('addProducts')
 
         app.get('/vagetable', async (req, res) => {
             const query = {};
@@ -48,14 +48,14 @@ async function run() {
             res.send(result);
         })
 
-        app.get('/booking', async (req, res) => {
+        app.get('/bookings', async (req, res) => {
             const email = req.query.email;
             const query = { email: email };
             const result = await allbookings.find(query).toArray();
             res.send(result);
         })
 
-        app.put('/updatePrice', async (req, res) => {
+        app.put('/bookings', async (req, res) => {
             const id = req.body._id;
             const filter = { _id: ObjectId(id) }
             const options = { upsert: true }
@@ -69,7 +69,7 @@ async function run() {
             res.send(result)
         })
 
-        app.delete('/deleteBooking/:id', async (req, res) => {
+        app.delete('/bookings/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) }
             const result = await allbookings.deleteOne(query)
@@ -86,13 +86,14 @@ async function run() {
             res.send(result);
         })
 
-        app.get('/alluser', async (req, res) => {
+        app.get('/user', async (req, res) => {
             const query = {};
+            // const result = await allUsers.find(query).sort({"_id": -1}).toArray();
             const result = await allUsers.find(query).toArray();
             res.send(result);
         })
 
-        app.put('/makeAdmin/:id', async (req, res) => {
+        app.put('/user/:id', async (req, res) => {
             const id = req.params.id;
             const filter = { _id: ObjectId(id) }
             const option = { upsert: true };
@@ -105,7 +106,7 @@ async function run() {
             res.send(result)
         })
 
-        app.delete('/userDelete/:id', async (req, res) => {
+        app.delete('/user/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) }
             const result = await allUsers.deleteOne(query);
@@ -118,7 +119,7 @@ async function run() {
             res.send(result)
         })
 
-        app.post('/addProducts', async (req, res) => {
+        app.post('/addProduct', async (req, res) => {
             const product = req.body;
             const query = product.cetagory_name;
             if (query == 'Vagetable Item') {
@@ -134,7 +135,7 @@ async function run() {
             res.send(result)
         })
 
-        app.get('/myProduct', async (req, res) => {
+        app.get('/addProduct', async (req, res) => {
             const email = req.query.email;
             const query = { email: email }
             const result = await addProduct.find(query).toArray();
